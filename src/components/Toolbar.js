@@ -11,10 +11,10 @@ class Toolbar extends Component {
             unread messages
           </p>
 
-          <button className="btn btn-danger">
-            <i className="fa fa-plus"></i>
-          </button>
-          
+          <a class="btn btn-danger">
+            <i class="fa fa-plus"></i>
+          </a>
+
           <button className="btn btn-default">
             <i className="fa fa-minus-square-o"></i>
           </button>

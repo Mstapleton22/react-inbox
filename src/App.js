@@ -7,8 +7,8 @@ import './App.css';
 
 class App extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       messages: []
     }
@@ -22,9 +22,9 @@ class App extends Component {
         return responseJSON
       })
   }
-
-
+  
   componentDidMount() {
+    // console.log(this.fetchMessages())
     this.fetchMessages()
       .catch(error => console.error(error))
   }
@@ -33,7 +33,7 @@ class App extends Component {
     return (
       <div className="container">
         <Toolbar></Toolbar>
-        <MessageList></MessageList>
+        <MessageList messages={this.state.messages}></MessageList>
         {/* <ComposeMessage></ComposeMessage> */}
       </div>
     );

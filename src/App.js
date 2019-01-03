@@ -1,25 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Toolbar from './components/Toolbar.js'
+import MessageList from './components/MessageList.js'
+import Message from './components/Message.js'
 import './App.css';
 
 class App extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      messages = []
+    }
+  }
+
+  fetchMessages = () => {
+     return fetch('http://localhost:8082/api/messages')
+  }
+
+
+
+
+
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-             <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className="container">
+        <Toolbar></Toolbar>
+        <Message></Message>
       </div>
     );
   }

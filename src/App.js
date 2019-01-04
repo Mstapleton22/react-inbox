@@ -10,7 +10,8 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      messages: []
+      messages: [],
+      addLabels: []
     }
   }
 
@@ -22,17 +23,25 @@ class App extends Component {
         return responseJSON
       })
   }
-  
+
   componentDidMount() {
-    // console.log(this.fetchMessages())
     this.fetchMessages()
       .catch(error => console.error(error))
+  }
+
+  updateLabels = (event) => {
+    // console.log(event.target.value)
+    this.setState({
+      addLabels: [...this.state.addLabels, event.target.value]
+    })
   }
 
   render() {
     return (
       <div className="container">
-        <Toolbar></Toolbar>
+        <Toolbar addLabels={this.state.addLabels} updateLabels={this.updateLabels}>
+
+        </Toolbar>
         <MessageList messages={this.state.messages}></MessageList>
         {/* <ComposeMessage></ComposeMessage> */}
       </div>

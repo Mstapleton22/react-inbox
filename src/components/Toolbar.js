@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
+import Message from './Message.js'
 
 
 class Toolbar extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      addLabels: []
+    }
+  }
+
   render() {
     return (
       <div className="row toolbar">
@@ -27,7 +36,7 @@ class Toolbar extends Component {
             Mark As Unread
           </button>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" onChange={this.props.updateLabels}>
             <option>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>

@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import Message from './Message.js'
+// import Message from './Message.js'
 
 
 class Toolbar extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      addLabels: []
-    }
-  }
 
   render() {
     return (
@@ -20,8 +13,8 @@ class Toolbar extends Component {
             unread messages
           </p>
 
-          <a class="btn btn-danger">
-            <i class="fa fa-plus"></i>
+          <a className="btn btn-danger">
+            <i className="fa fa-plus"></i>
           </a>
 
           <button className="btn btn-default">
@@ -36,15 +29,15 @@ class Toolbar extends Component {
             Mark As Unread
           </button>
 
-          <select className="form-control label-select" onChange={this.props.updateLabels}>
-            <option>Apply label</option>
+          <select className="form-control label-select" onChange={this.props.addLabel}>
+            <option disabled selected>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
           <select className="form-control label-select">
-            <option>Remove label</option>
+            <option disabled selected>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>

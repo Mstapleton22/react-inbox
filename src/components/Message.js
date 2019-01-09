@@ -3,55 +3,6 @@ import React from 'react';
 
 const Message = (props) => {
 
-  // messageRead() {
-  //   this.setState({
-  //     read: this.props.message.read,
-  //   })
-  // }
-
-  // messageSelect() {
-  //   this.setState({
-  //     selected: this.props.message.selected
-  //   })
-  // }
-
-  // messageLabel() {
-  //   this.setState({
-  //     labels: this.state.labels.concat(this.props.labels)
-  //   })
-  // }
-
-  // onClickMessage = (event) => {
-  //   this.setState({
-  //     read: true
-  //   })
-  // }
-
-  // selectMessage = (event) => {
-  //   this.setState({
-  //     selected: this.state.selected ? false : true
-  //   })
-  // }
-
-  // starMessage = (event) => {
-  //   this.setState({
-  //     starred: this.state.starred ? false : true
-  //   })
-  // }
-
-  // messageStarDefault() {
-  //   this.setState({
-  //     starred: this.props.message.starred
-  //   })
-  // }
-
-
-  // componentDidMount() {
-  //   // this.messageRead()
-  //   // this.messageSelect()
-  //   // this.messageStarDefault()
-  // }
-
   const classNameStyle = () => {
     let readClass = props.read ? "row message read" : "row message unread"
     let selectClass = props.selected ? "selected" : ""
@@ -74,14 +25,14 @@ const Message = (props) => {
       ? "label label-warning"
       : "hidden"
 
-  return (
 
-    < div className="container" >
+  return (
+    <>
       <div className={classNameStyle()}>
         <div className="col-xs-1">
           <div className="row" >
             <div className="col-xs-2" onChange={() => props.selectMessage(props.message.id)}>
-              <input type="checkbox" checked={props.selected}/>
+              <input type="checkbox" checked={props.selected} />
             </div>
             <div className="col-xs-2">
               <i className={props.starred ? "star fa fa-star" : "star fa fa-star-o"} onClick={() => props.starMessage(props.message.id)}></i>
@@ -93,13 +44,17 @@ const Message = (props) => {
           <span className={gschool}>gschool</span>
           <span className={personal}>personal</span>
           {/* {props.message.labels.map(label => <span className="label label-warning">{label}</span>)} */}
-          <a href="#">
+          <a href="@#">
             {props.subject}
           </a>
         </div>
       </div>
-    </div >
-
+      <div className={`row message-body ${props.message.opened ? `` : `hidden`}`}>
+        <div className="col-xs-11 col-xs-offset-1">
+          {props.body}
+        </div>
+      </div>
+    </>
   );
 }
 

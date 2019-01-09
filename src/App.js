@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Toolbar from './components/Toolbar.js'
 import MessageList from './components/MessageList.js'
 // import Message from './components/Message.js'
-// import ComposeMessage from './components/ComposeMessage.js'
+import ComposeMessage from './components/ComposeMessage.js'
 import './App.css';
 
 class App extends Component {
@@ -11,6 +11,7 @@ class App extends Component {
     super(props)
     this.state = {
       messages: [],
+      compose: false
     }
   }
 
@@ -21,8 +22,10 @@ class App extends Component {
         let addSelected = responseJSON.map(message => {
           if (!message.selected) {
             message.selected = false
+            message.opened = false
             return message
           } else {
+            message.opened = false
             return message
           }
         })
@@ -51,10 +54,19 @@ class App extends Component {
     })
   }
 
+  dropDownCompose = () => {
+    console.log('compose')
+    this.setState({
+      compose: !this.state.compose
+    })
+  }
+
   messageRead = (id) => {
     const readMessages = this.state.messages.map(message => {
-      if (message.id === id)
+      if (message.id === id) {
         message.read = true
+        message.opened = !message.opened
+      }
       return message
     })
     this.setState({
@@ -65,29 +77,31 @@ class App extends Component {
   }
 
   markAsRead = (id) => {
+    const ids = []
     const markRead = this.state.messages.map(message => {
       if (message.selected && !message.read)
         message.read = true
+      ids.push(message.id)
       return message
     })
     this.setState({
       messages: markRead
     })
-    // console.log(this.updates(id, "read", "read", true))
-    // this.updates([id], "read", "read", true)
+    this.updates(ids, "read", "read", true)
   }
 
   markAsUnread = (id) => {
+    const ids = []
     const markUnread = this.state.messages.map(message => {
       if (message.selected && message.read)
         message.read = false
+      ids.push(message.id)
       return message
     })
     this.setState({
       messages: markUnread
     })
-    // console.log(this.updates(id, "read", "read", true))
-    // this.updates([id], "read", "read", true)
+    this.updates(ids, "read", "read", true)
   }
 
   selectMessage = (id) => {
@@ -99,6 +113,7 @@ class App extends Component {
     this.setState({
       messages: select
     })
+    this.updates([id], "read", "read", true)
   }
 
   selectAllMessage = () => {
@@ -182,19 +197,21 @@ class App extends Component {
     return (
       <div className="container" >
         <Toolbar
+          messages={this.state.messages}
           addLabel={this.addLabel}
           removeLabel={this.removeLabel}
           deleteMessage={this.deleteMessage}
           selectAllMessage={this.selectAllMessage}
           markAsRead={this.markAsRead}
-          markAsUnread={this.markAsUnread}>
+          markAsUnread={this.markAsUnread}
+          dropDownCompose={this.dropDownCompose}>
         </Toolbar>
+        {this.state.compose ? <ComposeMessage /> : null}
         <MessageList
           messages={this.state.messages}
           messageRead={this.messageRead}
           selectMessage={this.selectMessage}
           starMessage={this.starMessage}
-
         >
         </MessageList>
 

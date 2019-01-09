@@ -15,6 +15,7 @@ class MessageList extends Component {
               read={message.read}
               messageRead={this.props.messageRead}
               subject={message.subject}
+              body={message.body}
               selected={message.selected}
               selectMessage={this.props.selectMessage}
               starred={message.starred}

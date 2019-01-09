@@ -35,19 +35,14 @@ class App extends Component {
     this.fetchMessages()
       .catch(error => console.error(error))
   }
-  // updateLabels = (event) => {
-  //   this.setState({
-  //     addLabels: [...this.state.addLabels, event.target.value]
-  //   })
-  // }
 
-  updates = async (id, command, key, value) => {
+  updates = async (id, command, prop, value) => {
     await fetch("http://localhost:8082/api/messages", {
       method: 'PATCH',
       body: JSON.stringify({
-        "messageIds": [id],
+        "messageIds": id,
         "command": command,
-        [key]: value
+        [prop]: value
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -59,14 +54,14 @@ class App extends Component {
   messageRead = (id) => {
     const readMessages = this.state.messages.map(message => {
       if (message.id === id)
-        message.read = !message.read
+        message.read = true
       return message
     })
     this.setState({
       messages: readMessages
     })
     // console.log(this.updates(id, "read", "read", true))
-    this.updates(id, "read", "read", true)
+    this.updates([id], "read", "read", true)
   }
 
   selectMessage = (id) => {
@@ -89,19 +84,61 @@ class App extends Component {
     this.setState({
       messages: star
     })
-    this.updates(id, "star", "starred", true)
+    this.updates([id], "star", "starred")
   }
 
+  // addLabelId = (id) => {
+  //   const labelId = this.state.messages.filter((message) => {
+  //     return message
+  //   }).map(message => message.id)
+  //   return labelId
+  // }
   addLabel = (event) => {
-    const label = this.state.messages.map(message => {
-      // console.log(this.state.messages)
-      if (message.selected === true)
-        message.labels = [...message.labels, event.target.value]
-      // console.log(event.target)
+    const ids = []
+    const label = this.state.messages.map((message) => {
+      if (message.selected === true) {
+        if (!message.labels.includes(event.target.value)) {
+          message.labels = [...message.labels, event.target.value]
+          ids.push(message.id)
+        }
+      }
       return message
     })
     this.setState({
       messages: label
+    })
+    console.log(event.target.value)
+    this.updates(ids, "addLabel", "label", event.target.value)
+  }
+
+
+  removeLabel = (event) => {
+    const ids = []
+    const remLabel = this.state.messages.map(message => {
+      if (message.selected === true) {
+        if (message.labels.includes(event.target.value)) {
+          const indexLabel = message.labels.indexOf(event.target.value)
+          message.labels.splice(indexLabel, 1)
+          ids.push(message.id)
+        }
+      }
+      return message
+    })
+    this.setState({
+      messages: remLabel
+    })
+    this.updates(ids, "removeLabel", "label", event.target.value)
+  }
+  //think about what messages you want to keep
+  deleteMessage = (event) => {
+    const deleteMessage = this.state.messages.filter(message => {
+      if (message.selected === true) {
+        delete (message.selected)
+      } else if (message.selected !== true)
+        return message
+    })
+    this.setState({
+      messages: deleteMessage
     })
   }
 
@@ -110,13 +147,16 @@ class App extends Component {
     return (
       <div className="container" >
         <Toolbar
-          addLabel={this.addLabel}>
+          addLabel={this.addLabel}
+          removeLabel={this.removeLabel}
+          deleteMessage={this.deleteMessage}>
         </Toolbar>
         <MessageList
           messages={this.state.messages}
           messageRead={this.messageRead}
           selectMessage={this.selectMessage}
           starMessage={this.starMessage}
+
         >
         </MessageList>
 

@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 class Toolbar extends Component {
 
   render() {
+
     return (
       <div className="row toolbar">
         <div className="col-md-12">
@@ -36,18 +37,18 @@ class Toolbar extends Component {
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" onChange={this.props.removeLabel}>
             <option disabled selected>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <button className="btn btn-default">
+          <button className="btn btn-default" onClick={() => this.props.deleteMessage(this.props.id)} >
             <i className="fa fa-trash-o"></i>
           </button>
         </div>
-      </div>
+      </div >
 
     );
   }

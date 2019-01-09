@@ -18,7 +18,7 @@ class MessageList extends Component {
               selected={message.selected}
               selectMessage={this.props.selectMessage}
               starred={message.starred}
-
+              deleteMessage={this.props.deleteMessage}
               starMessage={this.props.starMessage}
             // labels={this.props.addLabels}
             >

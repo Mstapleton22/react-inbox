@@ -26,8 +26,8 @@ class App extends Component {
             return message
           }
         })
-        this.setState({ messages: responseJSON })
-        return responseJSON
+        this.setState({ messages: addSelected })
+        return addSelected
       })
   }
 
@@ -64,6 +64,32 @@ class App extends Component {
     this.updates([id], "read", "read", true)
   }
 
+  markAsRead = (id) => {
+    const markRead = this.state.messages.map(message => {
+      if (message.selected && !message.read)
+        message.read = true
+      return message
+    })
+    this.setState({
+      messages: markRead
+    })
+    // console.log(this.updates(id, "read", "read", true))
+    // this.updates([id], "read", "read", true)
+  }
+
+  markAsUnread = (id) => {
+    const markUnread = this.state.messages.map(message => {
+      if (message.selected && message.read)
+        message.read = false
+      return message
+    })
+    this.setState({
+      messages: markUnread
+    })
+    // console.log(this.updates(id, "read", "read", true))
+    // this.updates([id], "read", "read", true)
+  }
+
   selectMessage = (id) => {
     const select = this.state.messages.map(message => {
       if (message.id === id)
@@ -72,6 +98,21 @@ class App extends Component {
     })
     this.setState({
       messages: select
+    })
+  }
+
+  selectAllMessage = () => {
+    const selectAllMess = this.state.messages.length === this.state.messages.filter(sel => sel.selected).length
+    const selectAll = this.state.messages.map(message => {
+      if (selectAllMess) {
+        message.selected = false
+      } else if (message.selected === false) {
+        message.selected = true
+      }
+      return message
+    })
+    this.setState({
+      messages: selectAll
     })
   }
 
@@ -87,12 +128,6 @@ class App extends Component {
     this.updates([id], "star", "starred")
   }
 
-  // addLabelId = (id) => {
-  //   const labelId = this.state.messages.filter((message) => {
-  //     return message
-  //   }).map(message => message.id)
-  //   return labelId
-  // }
   addLabel = (event) => {
     const ids = []
     const label = this.state.messages.map((message) => {
@@ -129,8 +164,8 @@ class App extends Component {
     })
     this.updates(ids, "removeLabel", "label", event.target.value)
   }
-  //think about what messages you want to keep
-  deleteMessage = (event) => {
+
+  deleteMessage = () => {
     const deleteMessage = this.state.messages.filter(message => {
       if (message.selected === true) {
         delete (message.selected)
@@ -149,7 +184,10 @@ class App extends Component {
         <Toolbar
           addLabel={this.addLabel}
           removeLabel={this.removeLabel}
-          deleteMessage={this.deleteMessage}>
+          deleteMessage={this.deleteMessage}
+          selectAllMessage={this.selectAllMessage}
+          markAsRead={this.markAsRead}
+          markAsUnread={this.markAsUnread}>
         </Toolbar>
         <MessageList
           messages={this.state.messages}

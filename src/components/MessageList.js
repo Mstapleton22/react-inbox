@@ -4,7 +4,6 @@ import Message from './Message.js'
 class MessageList extends Component {
 
   render() {
-    // console.log(this.props.messageRead)
     return (
       <div className="container">
         {this.props.messages ?
@@ -21,7 +20,6 @@ class MessageList extends Component {
               starred={message.starred}
               deleteMessage={this.props.deleteMessage}
               starMessage={this.props.starMessage}
-            // labels={this.props.addLabels}
             >
             </Message>) :
           <hi>Inbox is Empty!</hi>

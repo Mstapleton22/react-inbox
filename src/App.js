@@ -3,6 +3,7 @@ import Toolbar from './components/Toolbar.js'
 import MessageList from './components/MessageList.js'
 // import Message from './components/Message.js'
 import ComposeMessage from './components/ComposeMessage.js'
+import Flexbox from 'flexbox-react';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +12,10 @@ class App extends Component {
     super(props)
     this.state = {
       messages: [],
-      compose: false
+      compose: false,
+      subject: '',
+      body: '',
+      errorMessage: false
     }
   }
 
@@ -36,10 +40,43 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchMessages()
-      .catch(error => console.error(error))
+      .catch(error => {
+        this.setState({
+          errorMessage: true
+        })
+      })
   }
 
+  sendMessage = () => {
+    return fetch("http://localhost:8082/api/messages", {
+      method: 'POST',
+      body: JSON.stringify({
+        subject: this.state.subject,
+        body: this.state.body
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(responseJSON => {
+        this.setState({
+          messages: [...this.state.messages, responseJSON]
+        })
+      })
+  }
+
+
+  composeMessage = (event) => {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  }
+
+
   updates = async (id, command, prop, value) => {
+    // console.log('im here')
     await fetch("http://localhost:8082/api/messages", {
       method: 'PATCH',
       body: JSON.stringify({
@@ -55,7 +92,7 @@ class App extends Component {
   }
 
   dropDownCompose = () => {
-    console.log('compose')
+    // console.log('compose')
     this.setState({
       compose: !this.state.compose
     })
@@ -72,7 +109,7 @@ class App extends Component {
     this.setState({
       messages: readMessages
     })
-    // console.log(this.updates(id, "read", "read", true))
+    // console.log(this.updates([id], "read", "read", true))
     this.updates([id], "read", "read", true)
   }
 
@@ -181,15 +218,17 @@ class App extends Component {
   }
 
   deleteMessage = () => {
-    const deleteMessage = this.state.messages.filter(message => {
-      if (message.selected === true) {
-        delete (message.selected)
-      } else if (message.selected !== true)
-        return message
+    const ids = []
+    this.state.messages.map(message => {
+      if (message.selected) {
+        ids.push(message.id)
+      }
     })
+    const deleteMessage = this.state.messages.filter(message => !message.selected)
     this.setState({
       messages: deleteMessage
     })
+    this.updates(ids, "delete")
   }
 
   render() {
@@ -204,18 +243,26 @@ class App extends Component {
           selectAllMessage={this.selectAllMessage}
           markAsRead={this.markAsRead}
           markAsUnread={this.markAsUnread}
-          dropDownCompose={this.dropDownCompose}>
+          dropDownCompose={this.dropDownCompose}
+          compose={this.state.compose}>
         </Toolbar>
-        {this.state.compose ? <ComposeMessage /> : null}
-        <MessageList
+        {this.state.compose ? <ComposeMessage sendMessage={this.sendMessage} composeMessage={this.composeMessage} /> : null}
+        < MessageList
           messages={this.state.messages}
           messageRead={this.messageRead}
           selectMessage={this.selectMessage}
           starMessage={this.starMessage}
         >
-        </MessageList>
-
-        {/* <ComposeMessage></ComposeMessage> */}
+        </MessageList >
+        <div className="error">
+          <h3>
+            {this.state.errorMessage
+              ? "Unable to load inbox"
+              : this.state.messages.length === 0
+                ? "Inbox is Empty"
+                : ""}
+          </h3>
+        </div>
       </div >
     );
   }

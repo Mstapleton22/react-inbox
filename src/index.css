@@ -72,3 +72,9 @@ footer.spacer {
 .fa-close {
   cursor: pointer;
 }
+
+.error {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
